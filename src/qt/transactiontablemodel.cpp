@@ -182,6 +182,8 @@ public:
         if(idx >= 0 && idx < cachedWallet.size())
         {
             TransactionRecord *rec = &cachedWallet[idx];
+            if (!rec || rec->hash.IsNull())
+                return nullptr;
 
             // Get required locks upfront. This avoids the GUI from getting
             // stuck if the core is holding the locks for a longer time - for
