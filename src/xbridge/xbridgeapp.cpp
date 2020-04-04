@@ -1686,7 +1686,8 @@ Error App::acceptXBridgeTransaction(const uint256     & id,
 
     WalletConnectorPtr connFrom = connectorByCurrency(ptr->fromCurrency);
     WalletConnectorPtr connTo   = connectorByCurrency(ptr->toCurrency);
-    if (!connFrom || !connTo)
+    bool nowalletswitch = gArgs.GetBoolArg("-dxnowallets", false);
+    if ((!connFrom || !connTo) && !nowalletswitch)
     {
         ptr->state = priorState;
         // no session

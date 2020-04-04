@@ -469,7 +469,8 @@ bool Session::Impl::processTransaction(XBridgePacketPtr packet) const
     xbridge::App & xapp = xbridge::App::instance();
     WalletConnectorPtr sconn = xapp.connectorByCurrency(scurrency);
     WalletConnectorPtr dconn = xapp.connectorByCurrency(dcurrency);
-    if (!sconn || !dconn)
+    bool nowalletswitch = gArgs.GetBoolArg("-dxnowallets", false);
+    if ((!sconn || !dconn) && !nowalletswitch)
     {
         WARN() << "no connector for <" << (!sconn ? scurrency : dcurrency) << "> " << __FUNCTION__;
         return true;
@@ -708,7 +709,8 @@ bool Session::Impl::processPendingTransaction(XBridgePacketPtr packet) const
 
     WalletConnectorPtr sconn = xapp.connectorByCurrency(scurrency);
     WalletConnectorPtr dconn = xapp.connectorByCurrency(dcurrency);
-    if (!sconn || !dconn)
+    bool nowalletswitch = gArgs.GetBoolArg("-dxnowallets", false);
+    if ((!sconn || !dconn) && !nowalletswitch)
     {
         WARN() << "no connector for <" << (!sconn ? scurrency : dcurrency) << "> " << __FUNCTION__;
         return true;
@@ -845,7 +847,8 @@ bool Session::Impl::processTransactionAccepting(XBridgePacketPtr packet) const
 
     xbridge::App & xapp = xbridge::App::instance();
     WalletConnectorPtr conn = xapp.connectorByCurrency(scurrency);
-    if (!conn)
+    bool nowalletswitch = gArgs.GetBoolArg("-dxnowallets", false);
+    if (!conn || !nowalletswitch)
     {
         WARN() << "no connector for <" << scurrency << "> " << __FUNCTION__;
         return true;
@@ -1135,7 +1138,8 @@ bool Session::Impl::processTransactionHold(XBridgePacketPtr packet) const
     // processing
 
     WalletConnectorPtr conn = xapp.connectorByCurrency(xtx->toCurrency);
-    if (!conn)
+    bool nowalletswitch = gArgs.GetBoolArg("-dxnowallets", false);
+    if (!conn || !nowalletswitch)
     {
         WARN() << "no connector for <" << xtx->toCurrency << "> " << __FUNCTION__;
         return true;
